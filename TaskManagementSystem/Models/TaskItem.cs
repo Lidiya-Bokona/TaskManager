@@ -1,34 +1,36 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace TaskManagementSystem.Models
 {
-    // Purpose: This class defines what a Task looks like in our app.
-    // Responsibility: It holds the data for Title, Description, Date, and Status.
-    // Interactions: It is used by the Database, the Service, and the Views.
+    /// <summary>
+    /// Purpose: This class is the data blueprint for a single Task.
+    /// Responsibility: It tells the app and the database what information to store.
+    /// Interacts with: The Database, the TaskService, and the Views.
+    /// </summary>
     public class TaskItem
     {
-        // Purpose: Unique ID for the database.
-        // Why: The database needs a primary key to find specific tasks.
+        // Purpose: Unique ID number for the database.
+        // Why: Every task needs its own "ID badge" so we can find it later.
         [Key]
         public int Id { get; set; }
 
         // Purpose: The name of the task.
-        // Why: Required so the user knows what the task is.
-        [Required(ErrorMessage = "Title is required")]
+        // Why: Required because you can't have a task without a name!
+        [Required(ErrorMessage = "Yo, you gotta give the task a title!")]
         public string Title { get; set; }
 
         // Purpose: Extra details about the task.
-        // Why: Optional, so the user can add more info if they want.
+        // Why: This is optional, sometimes you don't need a description.
         public string? Description { get; set; }
 
-        // Purpose: When the task needs to be done.
-        // Why: Required to help users track deadlines.
-        [Required(ErrorMessage = "Due Date is required")]
+        // Purpose: When the task is due.
+        // Why: Required so we don't miss our deadlines.
+        [Required(ErrorMessage = "Don't forget the date!")]
         [DataType(DataType.Date)]
         public DateTime DueDate { get; set; }
 
-        // Purpose: Tells us if the task is finished.
-        // Why: Helps filter and track progress. Default is "Pending".
+        // Purpose: Current progress of the task.
+        // Why: Defaults to "Pending" because new tasks aren't done yet.
         public string Status { get; set; } = "Pending";
     }
 }
