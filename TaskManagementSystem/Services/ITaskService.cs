@@ -1,12 +1,11 @@
-﻿using TaskManagementSystem.Models;
+using TaskManagementSystem.Models;
 
 namespace TaskManagementSystem.Services
 {
-    // Purpose: A blueprint for what the Task Service can do.
-    // Responsibility: Lists the methods available for managing tasks.
+    // Purpose: A list of rules for what our TaskService MUST do.
     public interface ITaskService
     {
-        Task<IEnumerable<TaskItem>> GetAllTasksAsync();
+        Task<IEnumerable<TaskItem>> GetAllTasksAsync(string searchString);
         Task<TaskItem> GetTaskByIdAsync(int id);
         Task CreateTaskAsync(TaskItem task);
         Task UpdateTaskAsync(TaskItem task);
