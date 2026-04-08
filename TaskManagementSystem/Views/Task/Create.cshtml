@@ -1,0 +1,49 @@
+@model TaskManagementSystem.Models.TaskItem
+
+@{
+    // Purpose: Sets the title for the browser tab.
+    ViewData["Title"] = "Create Task";
+}
+
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Create a New Task</h4>
+        </div>
+        <div class="card-body">
+            <form asp-action="Create">
+                <!-- Purpose: Summary of validation errors. 
+                     Why: If the user forgets the title, it tells them here. -->
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="Title" class="control-label fw-bold"></label>
+                    <input asp-for="Title" class="form-control" placeholder="Enter task name..." />
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="Description" class="control-label fw-bold"></label>
+                    <textarea asp-for="Description" class="form-control" rows="3" placeholder="Optional details..."></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-4">
+                    <label asp-for="DueDate" class="control-label fw-bold"></label>
+                    <input asp-for="DueDate" class="form-control" type="date" />
+                    <span asp-validation-for="DueDate" class="text-danger"></span>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-success">Save Task</button>
+                    <a asp-action="Index" class="btn btn-outline-secondary">Back to List</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @* Purpose: Loads JavaScript to validate fields without reloading the page. *@
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
