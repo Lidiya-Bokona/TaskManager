@@ -1,0 +1,6 @@
+1. Open the solution in Visual Studio.
+2. Open appsettings.json and ensure the DefaultConnection string points to your local SQL Server instance.
+3. Open the Package Manager Console.
+4. Run Install-Package Microsoft.EntityFrameworkCore.Tools to ensure the migration tools are available.
+5. Run Add-Migration InitialCreate to create the database schema.
+6. Run Update-Database to build the actual tables.
