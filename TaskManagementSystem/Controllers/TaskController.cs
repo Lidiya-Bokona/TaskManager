@@ -1,96 +1,66 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using TaskManagementSystem.Models;
 using TaskManagementSystem.Services;
 
 namespace TaskManagementSystem.Controllers
 {
-    // Purpose: The Waiter of the app. It takes web requests.
-    // Responsibility: Calls the Service and returns the correct View.
+    /// <summary>
+    /// Purpose: Handles web requests from the user.
+    /// Responsibility: It's a "Thin Layer"—it just calls the Service and returns a View.
+    /// </summary>
     public class TaskController : Controller
     {
-        private readonly ITaskService _taskService;
+        private readonly ITaskService _service;
 
-        // Constructor: Injects the TaskService so we can use it.
-        public TaskController(ITaskService taskService)
-        {
-            _taskService = taskService;
-        }
+        // Constructor: Injects the Service into the Controller.
+        public TaskController(ITaskService service) { _service = service; }
 
-        // Method: Shows the list of all tasks.
-        public async Task<IActionResult> Index()
-        {
-            var tasks = await _taskService.GetAllTasksAsync();
-            return View(tasks);
-        }
+        // Method: Shows the list of tasks.
+        public async Task<IActionResult> Index(string searchString) => View(await _service.GetAllTasksAsync(searchString));
 
-        // Method: Shows the "Create Task" page.
-        public IActionResult Create()
-        {
-            return View();
-        }
+        // Method: Shows the empty "Create" form.
+        public IActionResult Create() => View();
 
-        // Method: Handles the "Save" button for a new task.
+        // Method: Receives the new task data and tells the service to save it.
         [HttpPost]
         public async Task<IActionResult> Create(TaskItem task)
         {
             if (ModelState.IsValid)
             {
-                try
-                {
-                    await _taskService.CreateTaskAsync(task);
+                try {
+                    await _service.CreateTaskAsync(task);
                     return RedirectToAction(nameof(Index));
-                }
-                catch (Exception ex)
-                {
+                } catch (Exception ex) {
                     ModelState.AddModelError("DueDate", ex.Message);
                 }
             }
             return View(task);
         }
 
-        // Method: Shows the "Edit" page for a specific task.
-        public async Task<IActionResult> Edit(int id)
-        {
-            var task = await _taskService.GetTaskByIdAsync(id);
-            return View(task);
-        }
+        // Method: Shows the "Edit" form.
+        public async Task<IActionResult> Edit(int id) => View(await _service.GetTaskByIdAsync(id));
 
-        // Method: Handles the "Save" button for editing a task.
+        // Method: Saves the edited changes.
         [HttpPost]
         public async Task<IActionResult> Edit(TaskItem task)
         {
-            if (ModelState.IsValid)
-            {
-                await _taskService.UpdateTaskAsync(task);
-                return RedirectToAction(nameof(Index));
-            }
+            if (ModelState.IsValid) { await _service.UpdateTaskAsync(task); return RedirectToAction(nameof(Index)); }
             return View(task);
         }
 
-        // Method: Marks a task as "Completed" immediately.
-        public async Task<IActionResult> MarkCompleted(int id)
-        {
-            var task = await _taskService.GetTaskByIdAsync(id);
-            if (task != null)
-            {
-                task.Status = "Completed";
-                await _taskService.UpdateTaskAsync(task);
-            }
-            return RedirectToAction(nameof(Index));
-        }
+        // Method: Shows the scary "Delete Confirmation" page.
+        public async Task<IActionResult> Delete(int id) => View(await _service.GetTaskByIdAsync(id));
 
-        // Method: Shows the "Are you sure you want to delete?" page.
-        public async Task<IActionResult> Delete(int id)
-        {
-            var task = await _taskService.GetTaskByIdAsync(id);
-            return View(task);
-        }
-
-        // Method: Actually deletes the task after confirmation.
+        // Method: Actually deletes it after the user says "Yes."
         [HttpPost, ActionName("Delete")]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int id) { await _service.DeleteTaskAsync(id); return RedirectToAction(nameof(Index)); }
+
+        // Method: Shortcut to mark a task done.
+        public async Task<IActionResult> Complete(int id)
         {
-            await _taskService.DeleteTaskAsync(id);
+            var task = await _service.GetTaskByIdAsync(id);
+            task.Status = "Completed";
+            await _service.UpdateTaskAsync(task);
             return RedirectToAction(nameof(Index));
         }
     }
