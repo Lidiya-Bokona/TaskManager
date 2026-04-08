@@ -1,0 +1,20 @@
+@model TaskManagementSystem.Models.TaskItem
+
+<div class="container mt-4 text-center">
+    <div class="alert alert-danger shadow">
+        <h2 class="alert-heading">Are you sure?</h2>
+        <p>You are about to permanently delete this task. This cannot be undone.</p>
+        <hr>
+        <div class="bg-white p-3 rounded mb-3 text-start">
+            <h5><strong>Title:</strong> @Model.Title</h5>
+            <p><strong>Description:</strong> @(string.IsNullOrEmpty(Model.Description) ? "No description provided." : Model.Description)</p>
+            <p><strong>Due Date:</strong> @Model.DueDate.ToLongDateString()</p>
+        </div>
+        
+        <form asp-action="Delete">
+            <input type="hidden" asp-for="Id" />
+            <button type="submit" class="btn btn-danger btn-lg me-2">Yes, Delete Task</button>
+            <a asp-action="Index" class="btn btn-secondary btn-lg">No, Go Back</a>
+        </form>
+    </div>
+</div>
