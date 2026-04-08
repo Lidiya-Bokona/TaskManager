@@ -1,20 +1,20 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using TaskManagementSystem.Models;
 
 namespace TaskManagementSystem.Data
 {
-    // Purpose: This class manages the connection to the SQL database.
-    // Responsibility: It tells Entity Framework which models should be tables.
+    /// <summary>
+    /// Purpose: Manages the connection to the SQL database.
+    /// Responsibility: It creates the "Tasks" table in the database.
+    /// </summary>
     public class ApplicationDbContext : DbContext
     {
-        // Constructor: Initializes the database options.
-        // Input: DbContextOptions (database settings like the connection string).
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
-        {
-        }
+        // Constructor: Initializes the database connection settings.
+        // Why: Required to pass the connection string from appsettings.json.
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
-        // Property: The collection of Tasks.
-        // Why: This creates the "Tasks" table in our database.
+        // Property: Represents the Tasks table.
+        // What: It stores our TaskItem objects as rows in a table.
         public DbSet<TaskItem> Tasks { get; set; }
     }
 }
